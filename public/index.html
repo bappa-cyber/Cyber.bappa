@@ -1,0 +1,24 @@
+<input id="name" type="text" placeholder="Enter Your Name">
+<br><br>
+
+<input id="email" type="email" placeholder="Enter Your Email">
+<br><br>
+
+<button onclick="saveData()">Save</button>
+
+<script>
+  function saveData() {
+    let name = document.getElementById("name").value;
+    let email = document.getElementById("email").value;
+
+    fetch("http://localhost:3000/save", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ name, email })
+    })
+    .then(res => res.text())
+    .then(data => alert(data));
+  }
+</script>
