@@ -1,4 +1,6 @@
-const socket = io("http://localhost:3000");
+const BASE_URL = "https://cyber-bappa.onrender.com";
+
+const socket = io(BASE_URL);
 
 // Product list
 let products = ["Rice", "Milk", "Bread", "Egg"];
@@ -6,8 +8,6 @@ let products = ["Rice", "Milk", "Bread", "Egg"];
 // Render products
 function render() {
   let div = document.getElementById("products");
-  let loc = document.getElementById("location").value;
-
   div.innerHTML = "";
 
   products.forEach(p => {
@@ -19,9 +19,9 @@ function render() {
   });
 }
 
+// Login
 function login() {
-
-  fetch("http://localhost:3000/auth/login", {
+  fetch(BASE_URL + "/auth/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -39,12 +39,10 @@ function login() {
       alert("User Login Success");
     }
   });
-
 }
 
-// Get GPS location
+// GPS
 function getLocation() {
-
   navigator.geolocation.getCurrentPosition(pos => {
 
     let lat = pos.coords.latitude;
@@ -52,8 +50,7 @@ function getLocation() {
 
     console.log("Location:", lat, lng);
 
-    // Send to backend
-    fetch("http://localhost:3000/shops/nearest", {
+    fetch(BASE_URL + "/shops/nearest", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -62,19 +59,15 @@ function getLocation() {
     })
     .then(res => res.json())
     .then(shop => {
-
       console.log("Nearest Shop:", shop);
-
       showProducts(shop.products);
     });
 
   });
-
 }
 
 // Show products
 function showProducts(products) {
-
   let div = document.getElementById("products");
   div.innerHTML = "";
 
@@ -85,25 +78,22 @@ function showProducts(products) {
       </p>
     `;
   });
-
 }
 
-// Auto run
-getLocation();
+// Order
 function order(product) {
-
-  fetch("http://localhost:3000/orders", {
+  fetch(BASE_URL + "/orders", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
       product: product,
-      location: document.getElementById("location").value
+      location: "GPS"
     })
   });
-
 }
 
-// Auto render
-render();ok
+// Run
+getLocation();
+render();
